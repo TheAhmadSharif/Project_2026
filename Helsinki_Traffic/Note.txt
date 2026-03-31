@@ -1,0 +1,15 @@
+––––––––––––– 31 March 2026
+
+
+
+
+Statistical API for traffic measurement data of the city of Helsinki
+Traffic measurements from Helsinki which contain data of traffic volume, average speeds and the amounts of different types of vehicles, collected for different means of transportation (vehicles, pedestrians, and cyclists). The REST API provides statistical data in both JSON and CSV format, for multiple data sources and different means of automatic collection, e.g. LAM stations in the Helsinki region and pedestrian counting devices.
+
+The update frequency and aggregation interval vary by data source, of which more detailed descriptions can be fetched using the metadata operations of the API. Other information which can be queried includes the locations of the different counting devices and their aggregated, statistical measurement history.
+
+
+https://avoindata.suomi.fi/data/en_GB/dataset/helsingin-liikennemittausten-tilastorajapinta
+
+
+https://lidotiku.api.hel.fi/swagger#/api/api_observations_aggregate_list
