@@ -1,0 +1,148 @@
+
+
+
+
+
+
+
+Brief: Statistical API for traffic measurement data of the city of Helsinki
+Traffic measurements from Helsinki which contain data of traffic volume, average speeds and the amounts of different types of vehicles, collected for different means of transportation (vehicles, pedestrians, and cyclists). The REST API provides statistical data in both JSON and CSV format, for multiple data sources and different means of automatic collection, e.g. LAM stations in the Helsinki region and pedestrian counting devices.
+
+The update frequency and aggregation interval vary by data source, of which more detailed descriptions can be fetched using the metadata operations of the API. Other information which can be queried includes the locations of the different counting devices and their aggregated, statistical measurement history.
+
+
+
+
+
+
+import requests
+import pandas as pd
+
+# Sensors we want to fetch
+sensor_ids = [1, 2]
+
+# List to store all data
+all_sensors_data = []
+
+# Loop over each sensor
+for sensor_id in sensor_ids:
+    print(f"Fetching data for sensor {sensor_id}...")
+    
+    # Start URL and parameters
+    url = "https://lidotiku.api.hel.fi/api/observations/aggregate/"
+    params = {
+        "counter": sensor_id,
+        "period": "hour",          # hourly aggregation
+        "measurement_type": "count",
+        "format": "json",
+        "page_size": 100           # fetch 100 rows per page
+    }
+    
+    while url:
+        response = requests.get(url, params=params)
+        if response.status_code != 200:
+            print(f"Failed to fetch data for sensor {sensor_id}, status: {response.status_code}")
+            break
+
+        data = response.json()
+        results = data.get("results", [])
+        
+        # Add sensor_id for clarity
+        for record in results:
+            record["sensor_id"] = sensor_id
+            all_sensors_data.append(record)
+        
+        # Prepare for next page
+        url = data.get("next")  # next page URL
+        params = {}             # next URL already contains all query params
+
+# Convert to DataFrame
+df = pd.DataFrame(all_sensors_data)
+
+# Reorder columns for readability
+cols = ["sensor_id", "counterId", "startTime", "direction", "unit", "aggregatedValue", "period"]
+df = df[cols]
+
+# Save to CSV
+csv_filename = "sensors_1_to_5_full_data.csv"
+df.to_csv(csv_filename, index=False)
+
+print(f"Saved {len(df)} rows for sensors 1–5 to {csv_filename}")
+
+
+
+https://lidotiku.api.hel.fi/api/observations/aggregate/?counter=1&format=json&measurement_type=count&page=1&period=hour
+
+
+
+{
+  "count": 22758,
+  "next": "https://lidotiku.api.hel.fi/api/observations/aggregate/?counter=1&format=json&measurement_type=count&page=2&period=hour",
+  "previous": null,
+  "results": [
+    {
+      "period": "hour",
+      "counterId": 1,
+      "startTime": "2025-10-01T10:00:00+03:00",
+      "direction": "from harbor",
+      "unit": "n",
+      "aggregatedValue": 0
+    },
+    {
+      "period": "hour",
+      "counterId": 1,
+      "startTime": "2025-10-01T09:00:00+03:00",
+      "direction": "from harbor",
+      "unit": "n",
+      "aggregatedValue": 0
+    },
+
+
+
+
+
+For sensors 1 it has 22758 data objects. There are total 3569 Sensors. 
+
+https://lidotiku.api.hel.fi/api/counters/?format=json&page_size=1
+
+{
+  "count": 3569,
+  "next": "https://lidotiku.api.hel.fi/api/counters/?format=json&page=2&page_size=1",
+  "previous": null,
+  "results": {
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "type": "Feature",
+        "id": 1,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [24.920879, 60.155215]
+        },
+        "properties": {
+          "id": 1,
+          "name": "Harbor 3 light",
+          "source": "InfoTripla",
+          "sourceId": 1,
+          "classifying": true,
+          "crsEpsg": 4326,
+          "municipalityCode": "091",
+          "dataReceived": false,
+          "firstStoredObservation": null,
+          "lastStoredObservation": null
+        }
+      }
+    ]
+  }
+}
+I want to get all the data in a csv file. This is the code that works fine. Can I optimize code more for efficiency
+
+Such as save row by row or individually and later merge them
+
+1. Print How much time to get 1 sensors data 
+
+
+You are an OCR assistant. I have $(ls *.JPG | wc -l) JPG images in this folder that are pages of a document. Please: 1) Process each  
+image in alphabetical order by filename, 2) Extract all visible text from each image, 3) Compile into a single file called              
+'Business_In_Finland.md' with proper Markdown formatting, 4) Use '## [Page Number]' as a section header before each image's text, 5)    
+Preserve paragraph breaks and any structure you can detect.preserve the structure as best as possible.  

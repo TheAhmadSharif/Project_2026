@@ -13,3 +13,5 @@ https://avoindata.suomi.fi/data/en_GB/dataset/helsingin-liikennemittausten-tilas
 
 
 https://lidotiku.api.hel.fi/swagger#/api/api_observations_aggregate_list
+
+https://lidotiku.api.hel.fi/api/counters/?format=json
