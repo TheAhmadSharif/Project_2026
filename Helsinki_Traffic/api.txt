@@ -1,0 +1,85 @@
+Statistical API for traffic measurement data of the city of Helsinki
+Traffic measurements from Helsinki which contain data of traffic volume, average speeds and the amounts of different types of vehicles, collected for different means of transportation (vehicles, pedestrians, and cyclists). The REST API provides statistical data in both JSON and CSV format, for multiple data sources and different means of automatic collection, e.g. LAM stations in the Helsinki region and pedestrian counting devices.
+
+The update frequency and aggregation interval vary by data source, of which more detailed descriptions can be fetched using the metadata operations of the API. Other information which can be queried includes the locations of the different counting devices and their aggregated, statistical measurement history.
+
+
+
+
+Lists the traffic data sources for which counters and observations exist.
+
+
+
+
+
+
+
+
+
+# https://lidotiku.api.hel.fi/api/counters/?format=json&page_size=2
+# https://lidotiku.api.hel.fi/api/observations/?counter=1&format=json&page_size=2&start_date=2025-08-01&end_date=2025-09-01     #
+
+# https://lidotiku.api.hel.fi/api/observations/aggregate/?counter=1&period=hour&measurement_type=count   It shows the total number of rows
+
+
+
+
+
+
+
+https://lidotiku.api.hel.fi/api/metadata/sources/
+
+
+
+
+This endpoint lists all measurement devices/sensors (counters) in Helsinki's traffic system.
+https://lidotiku.api.hel.fi/api/counters/
+https://lidotiku.api.hel.fi/api/counters/?latitude=60.1699&longitude=24.9384&distance=1.0
+
+
+
+Lists the traffic data sources for which counters and observations exist.
+https://lidotiku.api.hel.fi/api/metadata/sources/EcoCounter
+
+
+https://lidotiku.api.hel.fi/api/observations/?counter=5
+
+
+
+
+––––––––––––––––
+https://lidotiku.api.hel.fi/api/observations/?counter=5
+
+
+
+https://lidotiku.api.hel.fi/api/counters/?format=json&page=2
+
+
+
+
+
+
+
+–––––––––––––––––––––––– 
+https://lidotiku.api.hel.fi/api/observations/?counter=1&format=json
+https://lidotiku.api.hel.fi/api/observations/?counter=1&format=json&page=2
+ {
+      "typeofmeasurement": "count",
+      "phenomenondurationseconds": 60,
+      "vehicletype": "roadvehicle",
+      "direction": "from harbor",
+      "unit": "n",
+      "value": 1,
+      "datetime": "2025-09-30T12:48:00+03:00",
+      "source": "InfoTripla",
+      "counter": "https://lidotiku.api.hel.fi/api/counters/1/?format=json",
+      "counterId": 1
+    },
+
+
+
+
+
+–––––––––––––––––––––––– 
+https://lidotiku.api.hel.fi/api/observations/aggregate/?counter=5&period=hour&measurement_type=speed
+https://lidotiku.api.hel.fi/api/observations/aggregate/?counter=5&period=hour&measurement_type=count

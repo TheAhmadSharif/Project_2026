@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Helsinki Traffic Sensors Map</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: system-ui, sans-serif; background: #f5f5f5; color: #222; padding: 16px; }
+    h1 { font-size: 18px; font-weight: 500; margin-bottom: 4px; }
+    .subtitle { font-size: 13px; color: #666; margin-bottom: 12px; }
+    .controls { display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; align-items: center; }
+    select { font-size: 13px; padding: 6px 10px; border: 1px solid #ddd; border-radius: 8px; background: white; }
+    #count-label { font-size: 12px; color: #888; }
+
+    #map { width: 100%; height: 800px; border-radius: 12px; border: 1px solid #ddd; }
+    .legend { display: flex; gap: 16px; margin-top: 10px; flex-wrap: wrap; font-size: 12px; color: #666; }
+    .leg-item { display: flex; align-items: center; gap: 5px; }
+    .leg-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+    .info-bar { font-size: 12px; color: #555; margin-top: 8px; min-height: 18px; }
+    .scroll-hint { font-size: 11px; color: #aaa; margin-top: 4px; }
+    .error { color: #c0392b; font-size: 13px; margin-top: 8px; background: #fdecea; padding: 10px 14px; border-radius: 8px; }
+
+    /* Move Leaflet zoom control to bottom right */
+    .leaflet-bottom.leaflet-right .leaflet-control-zoom {
+      margin-bottom: 16px;
+      margin-right: 16px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Helsinki Traffic Sensors</h1>
+  <p class="subtitle">Statistical API — traffic measurement devices across Helsinki metropolitan area</p>
+
+  <div class="controls">
+    <select id="filter-source" disabled>
+      <option value="all">All sources</option>
+    </select>
+    <span id="count-label" style="font-size:12px;color:#888;">Loading helsinki_sensors.csv...</span>
+  </div>
+
+  <div id="map"></div>
+
+  <div class="legend" id="legend"></div>
+  <div class="info-bar" id="info-bar">Click a marker to see sensor details</div>
+  <div class="scroll-hint">Click map to enable scroll zoom &middot; Move mouse out to disable</div>
+  <div class="error" id="error-msg" style="display:none;"></div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+
+    /* ─── Color palette per source ─────────────────────────── */
+    const SOURCE_COLORS = {
+      'InfoTripla':    '#D85A30',
+      'LIVA':          '#378ADD',
+      'HEL LAM':       '#639922',
+      'Fintraffic':    '#BA7517',
+      'EcoCounter':    '#1D9E75',
+      'Marksman':      '#7F77DD',
+      'SmartJunction': '#D4537E'
+    };
+
+    /* ─── Init Leaflet map
+           zoomControl: false  → removes default top-left zoom
+           then re-add it at bottomright                        */
+    const map = L.map('map', {
+      scrollWheelZoom: false,
+      zoomControl: false          // disable default top-left zoom
+    }).setView([60.195, 24.97], 12);
+
+    // Re-add zoom control at bottom right
+    L.control.zoom({ position: 'bottomright' }).addTo(map);
+
+    map.on('click',    () => map.scrollWheelZoom.enable());
+    map.on('mouseout', () => map.scrollWheelZoom.disable());
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      maxZoom: 19
+    }).addTo(map);
+
+    /* ─── Parse CSV text ────────────────────────────────────── */
+    function parseCSV(text) {
+      const lines   = text.trim().split('\n');
+      const headers = lines[0].split(',').map(h => h.trim());
+      return lines.slice(1).map(line => {
+        const vals = line.split(',');
+        const obj  = {};
+        headers.forEach((h, i) => obj[h] = (vals[i] || '').trim());
+        return obj;
+      }).filter(row => row.latitude && row.longitude);
+    }
+
+    /* ─── Marker icon ───────────────────────────────────────── */
+    function makeIcon(color) {
+      return L.divIcon({
+        className: '',
+        html: `<div style="width:10px;height:10px;border-radius:50%;background:${color};border:2px solid white;"></div>`,
+        iconSize:   [10, 10],
+        iconAnchor: [5, 5]
+      });
+    }
+
+    /* ─── Format date ───────────────────────────────────────── */
+    function fmtDate(d) {
+      if (!d) return 'N/A';
+      return new Date(d).toLocaleDateString('en-GB', {
+        day: 'numeric', month: 'short', year: 'numeric'
+      });
+    }
+
+    /* ─── Render / re-render markers ────────────────────────── */
+    let markers    = [];
+    let allSensors = [];
+
+    function renderMarkers(filterSource) {
+      markers.forEach(m => map.removeLayer(m));
+      markers = [];
+
+      const filtered = filterSource === 'all'
+        ? allSensors
+        : allSensors.filter(s => s.source === filterSource);
+
+      filtered.forEach(s => {
+        const lat = parseFloat(s.latitude);
+        const lng = parseFloat(s.longitude);
+        if (isNaN(lat) || isNaN(lng)) return;
+
+        const col = SOURCE_COLORS[s.source] || '#888';
+        const m = L.marker([lat, lng], { icon: makeIcon(col) })
+          .addTo(map)
+          .on('click', () => {
+            document.getElementById('info-bar').innerHTML =
+              `<strong>#${s.sensor_id}</strong>
+               &nbsp;&middot;&nbsp; ${s.name}
+               &nbsp;&middot;&nbsp;
+               <span style="color:${col};font-weight:500">${s.source}</span>
+               &nbsp;&middot;&nbsp;
+               ${lat.toFixed(5)}, ${lng.toFixed(5)}
+               &nbsp;&middot;&nbsp;
+               First: ${fmtDate(s.first_stored_observation)}
+               &nbsp;&middot;&nbsp;
+               Last: ${fmtDate(s.last_stored_observation)}`;
+          });
+        markers.push(m);
+      });
+
+      document.getElementById('count-label').textContent =
+        `${filtered.length} sensors shown`;
+    }
+
+    /* ─── Build legend + source dropdown ───────────────────── */
+    function buildUI(sensors) {
+      const sources = [...new Set(sensors.map(s => s.source))].sort();
+
+      const sel = document.getElementById('filter-source');
+      sel.innerHTML = '<option value="all">All sources</option>';
+      sources.forEach(src => {
+        const o = document.createElement('option');
+        o.value = src; o.textContent = src;
+        sel.appendChild(o);
+      });
+      sel.disabled = false;
+      sel.addEventListener('change', e => renderMarkers(e.target.value));
+
+      const legEl = document.getElementById('legend');
+      legEl.innerHTML = '';
+      sources.forEach(src => {
+        const col = SOURCE_COLORS[src] || '#888';
+        legEl.innerHTML += `
+          <div class="leg-item">
+            <div class="leg-dot" style="background:${col}"></div>
+            <span>${src}</span>
+          </div>`;
+      });
+    }
+
+    /* ─── Load helsinki_sensors.csv from same folder ────────── */
+    fetch('helsinki_sensors.csv')
+      .then(res => {
+        if (!res.ok) throw new Error(`HTTP ${res.status} — file not found`);
+        return res.text();
+      })
+      .then(text => {
+        allSensors = parseCSV(text);
+        buildUI(allSensors);
+        renderMarkers('all');
+      })
+      .catch(err => {
+        document.getElementById('count-label').textContent = '';
+        const errEl = document.getElementById('error-msg');
+        errEl.style.display = 'block';
+        errEl.textContent =
+          `Could not load helsinki_sensors.csv — ${err.message}. ` +
+          `Make sure helsinki_sensors.csv is in the same folder as this HTML file ` +
+          `and open via a local server (e.g. python -m http.server).`;
+      });
+
+  </script>
+</body>
+</html>

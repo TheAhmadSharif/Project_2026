@@ -1,10 +1,3 @@
-
-
-
-
-
-
-
 Brief: Statistical API for traffic measurement data of the city of Helsinki
 Traffic measurements from Helsinki which contain data of traffic volume, average speeds and the amounts of different types of vehicles, collected for different means of transportation (vehicles, pedestrians, and cyclists). The REST API provides statistical data in both JSON and CSV format, for multiple data sources and different means of automatic collection, e.g. LAM stations in the Helsinki region and pedestrian counting devices.
 
@@ -14,135 +7,56 @@ The update frequency and aggregation interval vary by data source, of which more
 
 
 
-
-import requests
-import pandas as pd
-
-# Sensors we want to fetch
-sensor_ids = [1, 2]
-
-# List to store all data
-all_sensors_data = []
-
-# Loop over each sensor
-for sensor_id in sensor_ids:
-    print(f"Fetching data for sensor {sensor_id}...")
-    
-    # Start URL and parameters
-    url = "https://lidotiku.api.hel.fi/api/observations/aggregate/"
-    params = {
-        "counter": sensor_id,
-        "period": "hour",          # hourly aggregation
-        "measurement_type": "count",
-        "format": "json",
-        "page_size": 100           # fetch 100 rows per page
-    }
-    
-    while url:
-        response = requests.get(url, params=params)
-        if response.status_code != 200:
-            print(f"Failed to fetch data for sensor {sensor_id}, status: {response.status_code}")
-            break
-
-        data = response.json()
-        results = data.get("results", [])
-        
-        # Add sensor_id for clarity
-        for record in results:
-            record["sensor_id"] = sensor_id
-            all_sensors_data.append(record)
-        
-        # Prepare for next page
-        url = data.get("next")  # next page URL
-        params = {}             # next URL already contains all query params
-
-# Convert to DataFrame
-df = pd.DataFrame(all_sensors_data)
-
-# Reorder columns for readability
-cols = ["sensor_id", "counterId", "startTime", "direction", "unit", "aggregatedValue", "period"]
-df = df[cols]
-
-# Save to CSV
-csv_filename = "sensors_1_to_5_full_data.csv"
-df.to_csv(csv_filename, index=False)
-
-print(f"Saved {len(df)} rows for sensors 1–5 to {csv_filename}")
+https://lidotiku.api.hel.fi/api/observations/aggregate/?counter=5&period=hour&measurement_type=count
 
 
+page_size=x, x = 1000 It refers how many items will show in one request, page = x refers pagination page number
 
-https://lidotiku.api.hel.fi/api/observations/aggregate/?counter=1&format=json&measurement_type=count&page=1&period=hour
-
-
-
+perriod could be hour, day, week, month and year 
 {
-  "count": 22758,
-  "next": "https://lidotiku.api.hel.fi/api/observations/aggregate/?counter=1&format=json&measurement_type=count&page=2&period=hour",
-  "previous": null,
-  "results": [
-    {
-      "period": "hour",
-      "counterId": 1,
-      "startTime": "2025-10-01T10:00:00+03:00",
-      "direction": "from harbor",
-      "unit": "n",
-      "aggregatedValue": 0
-    },
-    {
-      "period": "hour",
-      "counterId": 1,
-      "startTime": "2025-10-01T09:00:00+03:00",
-      "direction": "from harbor",
-      "unit": "n",
-      "aggregatedValue": 0
-    },
-
-
-
-
-
-For sensors 1 it has 22758 data objects. There are total 3569 Sensors. 
-
-https://lidotiku.api.hel.fi/api/counters/?format=json&page_size=1
-
-{
-  "count": 3569,
-  "next": "https://lidotiku.api.hel.fi/api/counters/?format=json&page=2&page_size=1",
-  "previous": null,
-  "results": {
-    "type": "FeatureCollection",
-    "features": [
-      {
-        "type": "Feature",
-        "id": 1,
-        "geometry": {
-          "type": "Point",
-          "coordinates": [24.920879, 60.155215]
+    "count": 13350,
+    "next": "https://lidotiku.api.hel.fi/api/observations/aggregate/?counter=5&measurement_type=count&page=2&period=hour",
+    "previous": null,
+    "results": [
+        {
+            "period": "hour",
+            "counterId": 5,
+            "startTime": "2026-03-05T12:00:00+02:00",
+            "direction": "",
+            "unit": "n",
+            "aggregatedValue": 144
         },
-        "properties": {
-          "id": 1,
-          "name": "Harbor 3 light",
-          "source": "InfoTripla",
-          "sourceId": 1,
-          "classifying": true,
-          "crsEpsg": 4326,
-          "municipalityCode": "091",
-          "dataReceived": false,
-          "firstStoredObservation": null,
-          "lastStoredObservation": null
-        }
-      }
-    ]
-  }
-}
-I want to get all the data in a csv file. This is the code that works fine. Can I optimize code more for efficiency
+        {
+            "period": "hour",
+            "counterId": 5,
+            "startTime": "2026-03-05T11:00:00+02:00",
+            "direction": "",
+            "unit": "n",
+            "aggregatedValue": 132
+        },
+        {
+            "period": "hour",
+            "counterId": 5,
+            "startTime": "2026-03-05T10:00:00+02:00",
+            "direction": "",
+            "unit": "n",
+            "aggregatedValue": 233
+        },
 
-Such as save row by row or individually and later merge them
+Following files have the list of sensors_id. I would like to take 30 sensors id randomly. 
 
-1. Print How much time to get 1 sensors data 
+helsinki_sensors.csv
+sensor_id,source_id,name,source,longitude,latitude,first_stored_observation,last_stored_observation
+1,1.0,Harbor 3 light,InfoTripla,24.920879,60.155215,,
+2,2.0,Harbor 3 light,InfoTripla,24.920879,60.155215,,
+3,,3_343_6-005,LIVA,24.948374556599994,60.1977142219,2023-11-15T14:00:00+02:00,2026-03-05T12:30:00+02:00
+4,,3_442_6-001,LIVA,24.96881167536852,60.2036876683024,2023-11-15T14:00:00+02:00,2026-03-05T12:30:00+02:00
+5,,3_816_2-060A,LIVA,24.84937247438324,60.24571337799835,2023-11-15T14:00:00+02:00,2026-03-05T12:30:00+02:00
+38,,3_387_1-050B,LIVA,24.951128514098333,60.21045182114073,2023-11-15T14:00:00+02:00,2026-03-05T12:30:00+02:00
+39,,3_407_1-060,LIVA,24.955085250044906,60.181661464737026,2023-11-15T14:15:00+02:00,2026-03-05T12:30:00+02:00
+40,,3_525_4-010,LIVA,25.020373916222432,60.2408267655715,2023-11-15T14:00:00+02:00,2026-03-05T12:30:00+02:00
+41,,5_266_12-180B,LIVA,24.917468028149997,60.164361809349984,2023-11-15T14:00:00+02:00,2026-03-05T12:30:00+
 
-
-You are an OCR assistant. I have $(ls *.JPG | wc -l) JPG images in this folder that are pages of a document. Please: 1) Process each  
-image in alphabetical order by filename, 2) Extract all visible text from each image, 3) Compile into a single file called              
-'Business_In_Finland.md' with proper Markdown formatting, 4) Use '## [Page Number]' as a section header before each image's text, 5)    
-Preserve paragraph breaks and any structure you can detect.preserve the structure as best as possible.  
+Task: 
+1. I would like to download randomly 30 sensors dataset out of 3569 sensors. Follow  Statistics large number samples.
+2. Later, I would like to check the busiest hour. Day and Month 

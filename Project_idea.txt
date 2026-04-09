@@ -1,0 +1,177 @@
+Real time air quality at HSY monitoring sites
+Traffic Noise Zones in Helsinki 
+
+
+
+Summary: 
+Data Science graduate (Tampere University, 2024) with hands-on experience developing LLM and Agent
+applications using LangChain, HuggingFace, and Ollama. Strong foundation in ML algorithms, DL, and end-to-end
+model deployment. Seeking roles in ML, Data Science, or LLM application domains.
+
+
+
+My Technical Skills
+Core Languages: Python, R, MatLab
+LLMs & RAG: Ollama, HuggingFace, LangChain, LLM Agent, Chroma (Vector DB)
+Machine Learning: Neural Networks, Statistical Modeling, Regression Analysis, Hypothesis Testing, Classical ML
+Algorithms
+Web & DB : JS, Typescript, React, PHP, Django, Mysql, Postgresql, MongoDB,
+Cloud & Deployment: AWS (EC2, S3, SageMaker), Linux/Ubuntu, Docker
+Tools & Frameworks: Git, GitHub Actions, CI/CD
+
+
+
+––––––––––– Task 
+I want to develop few toy projects for my portfolio. It Should not be too simple. I want to make something significant work. Thats why I need idea and as well as datasets whcih I will work on. As I live in Tampere, Finland and my target job market is Finland. There is a open data website for Finland based. All are not useful to make something significant projects with these dataset. 
+
+Thats why I need to filter and select some dataset 
+
+
+
+For Example: 
+
+
+Statistical API for traffic measurement data of the city of Helsinki
+Traffic measurements from Helsinki which contain data of traffic volume, average speeds and the amounts of different types of vehicles, collected for different means of transportation (vehicles, pedestrians, and cyclists). The REST API provides statistical data in both JSON and CSV format, for multiple data sources and different means of automatic collection, e.g. LAM stations in the Helsinki region and pedestrian counting devices.
+
+The update frequency and aggregation interval vary by data source, of which more detailed descriptions can be fetched using the metadata operations of the API. Other information which can be queried includes the locations of the different counting devices and their aggregated, statistical measurement history.
+
+
+Key endpoints used
+Endpoint	Purpose
+GET /api/metadata/sources/	List all data sources
+GET /api/counters/	List all sensors with coordinates
+GET /api/observations/	Raw observations per sensor
+GET /api/observations/aggregate/	Aggregated data by period
+
+
+
+––––––––––––––––––– With the following data, I make this project. Not sure, is it a good project for portfolio. I will share other summary of dataset chunk by chunk. Review it and let me know which one good for a portfolio project. 
+
+Helsinki Traffic Analysis — Project Brief
+Statistical analysis of traffic measurement data from the City of Helsinki using the Lidotiku REST API. The project fetches sensor observations, samples statistically representative data, and analyses traffic patterns by hour, day, and month.
+
+Project overview
+The City of Helsinki operates 3,569 traffic sensors across the metropolitan area, collecting vehicle counts, average speeds, and pedestrian/cyclist volumes. This project queries the public REST API, draws a statistically valid random sample, downloads aggregate observations, and extracts key traffic patterns.
+
+Key findings:
+
+Busiest hour: 13:00 (622 avg vehicles) — lunch hour dominates over morning rush
+Busiest day: Wednesday (9,683 avg) — Friday dips significantly, likely hybrid work
+Busiest month: May (352,650 avg) — anomaly under investigation; all other months cluster between 142k–241k
+
+
+
+
+
+
+
+
+
+
+–––––––––––––––––––– 
+
+Nature trails
+The material shows the nature trails maintained by the environmental protection of the city of Turku in the Turku area and, in the case of Rauvolanlahti, also in the Kaarina area.
+
+Published Levels:
+
+WFS interface:
+
+GIS: Nature trails
+OGC API:
+
+Nature trails
+
+
+
+
+–––––––––––
+Driving ban areas for electric scooters in Turku and Kaarina
+Driving ban areas defined by Turku and Kaarina for commercial operators&#39; electric scooters and similar vehicles.
+
+
+
+––––––––––––––––––––
+Station-zoned area
+The data includes the outer boundary of the station-zoned area in vector format. The material covers site plans in accordance with the Land Use and Building Act and the Building Act valid until 2000, but not waterfront site plans. The data does not include the boundaries of individual site plans, but the outer boundary of the municipality&#39;s entire site plan area.
+
+The material belongs to SYKE&#39;s open materials (CC BY 4.0).
+
+In the open information service and in the internal use of the environmental administration, materials from the urban planning area have been available since 2007.
+
+Intended use: The material has been created for use by the environmental administration to support the tasks of land use.
+
+More information: https://geoportal.ymparisto.fi/meta/julkinen/dokumentit/Asemakaavat.pdf
+
+The material has been produced by combining the spatial data materials of the site plans of the Licensing and Supervision Agency into a national material. The material of the
+––––––––––––––––––––
+Geospatial dataset for the micromobility permit in Vantaa
+The geospatial dataset for the micromobility permit in Vantaa currently includes two datasets. In spring 2026, the dataset will be expanded to include mandatory parking zones and designated parking spots.
+
+Low-speed zones
+
+In low-speed zones, the speed limit for shared e-scooters is 10 km/h. The speed limit is enforced through the service provider's user application.
+
+No-go zones
+
+In no-go zones, riding and parking shared e-scooters is prohibited. These restrictions are enforced through the service provider’s user application.
+––––––––––––––––––––
+Address information of buildings in the built environment information system
+RThe built environment information system, Ryhti, brings together information on construction and land use nationwide. The information is generated in the basic work of the municipalities and provincial associations, and it is delivered to the national information system primarily through the interface. The construction information to be submitted to the system is a construction permit, demolition permit, landscape work permit and deviation decision. The addresses of the objects are delivered with the information. Addresses are created in Ryhti&#39;s structured form. In the first phase, the addresses do not have their own location points, but are assigned to building sites.
+Construction information is available nationwide from the built environment information system. The address information of buildings created before the introduction of the built environment information system has been entered into the built environment information system from the population information system of the Digi and population information system. During the transition period (2025-2028), municipalities can still submit the construction permit information to the population information system, from where it is forwarded to the built environment information system. The data content of the building data of the built environment information system is described in the interoperability platform: https://tietomallit.suomi.fi/model/raklu . Building data originating from the
+––––––––––––––––––––
+
+
+Keywords
+
+Keywords
+population (84)
+traffic (60)
+age (52)
+gender (43)
+maps (34)
+kela (29)
+social insurance institution of finland (29)
+social security (29)
+culture (26)
+libraries (23)
+buildings (22)
+environment (21)
+education (20)
+history (20)
+public transport (20)
+cycling (17)
+economy (16)
+energy (16)
+waste (15)
+books (14)
+roads (12)
+children (11)
+population change (11)
+streets (11)
+surveys (11)
+city planning (10)
+guide maps (10)
+households (10)
+native language (10)
+parking (10)
+addresses (9)
+bicycles (9)
+bus traffic (9)
+construction (9)
+migration (9)
+nature (9)
+schools (9)
+air quality (8)
+city plan (8)
+districts (8)
+emigration (8)
+housing (8)
+immigration (8)
+labour force (8)
+map (8)
+net migration (8)
+population projection (8)
+unemployment benefits (8)
+waste management (8)
