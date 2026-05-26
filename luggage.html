@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Missing Luggage / Kadonnut matkatavara</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Merriweather', Georgia, 'Times New Roman', serif;
+            background-color: #e0e0e0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        /* Main poster container */
+        .poster {
+            max-width: 1000px;
+            width: 100%;
+            background: white;
+            padding: 50px 40px 40px 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        /* Two column layout for languages */
+        .language-row {
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+
+        .language-box {
+            flex: 1;
+            min-width: 280px;
+            max-width: 400px;
+        }
+
+        /* Address row - centered above both languages */
+        .address-row {
+            text-align: center;
+            margin-bottom: 35px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #333;
+        }
+
+        .address {
+            font-size: 24px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            color: #2c3e50;
+        }
+
+        .heading {
+            font-size: 36px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            color: #2c3e50;
+        }
+
+        .address-label {
+            font-size: 16px;
+            color: #7f8c8d;
+            margin-bottom: 5px;
+        }
+
+        /* English styles */
+        .english .title {
+            font-size: 42px;
+            font-weight: bold;
+            text-decoration: underline;
+            margin-bottom: 25px;
+            letter-spacing: 1px;
+        }
+
+        .english .body-text {
+            font-size: 20px;
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        .english .return-line {
+            font-size: 20px;
+            line-height: 1.8;
+            margin-bottom: 25px;
+            font-weight: bold;
+        }
+
+        .english .thankyou {
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+
+        /* Finnish styles */
+        .finnish .title {
+            font-size: 42px;
+            font-weight: bold;
+            text-decoration: underline;
+            margin-bottom: 25px;
+            letter-spacing: 1px;
+        }
+
+        .finnish .body-text {
+            font-size: 20px;
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        .finnish .return-line {
+            font-size: 20px;
+            line-height: 1.8;
+            margin-bottom: 25px;
+            font-weight: bold;
+        }
+
+        .finnish .thankyou {
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+
+        /* Image section - centered at bottom */
+        .image-wrapper {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px dashed #ddd;
+        }
+
+        .image-wrapper img {
+            width: 200px;
+            height: auto;
+            border: 1px solid #bbb;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+
+        .image-wrapper img:hover {
+            transform: scale(1.02);
+        }
+
+     
+
+        /* Responsive: stack languages on mobile */
+        @media (max-width: 750px) {
+            .poster {
+                padding: 30px 20px;
+            }
+            .language-row {
+                gap: 30px;
+            }
+            .address {
+                font-size: 18px;
+            }
+            .english .title, .finnish .title {
+                font-size: 32px;
+            }
+            .english .body-text, .finnish .body-text,
+            .english .return-line, .finnish .return-line {
+                font-size: 18px;
+            }
+            .image-wrapper img {
+                width: 150px;
+            }
+        }
+
+        /* Print styles */
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+                margin: 0;
+            }
+            .poster {
+                box-shadow: none;
+                padding: 20px;
+                max-width: 100%;
+            }
+            .image-wrapper img {
+                border: 1px solid #aaa;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="poster">
+        <!-- Address at the top -->
+        <div class="address-row">
+            <div class="heading">📍Missing Luggage / Kadonnut matkatavara </div>
+        </div>
+
+        <!-- Language row: English + Finnish side by side -->
+        <div class="language-row">
+            <!-- English -->
+            <div class="language-box english">
+                <div class="title"> </div>
+                <div class="body-text">
+                    Lost in parking space on 25 May 2026.<br>
+                    Wash and keep dry. Not abandoned.
+                </div>
+                <div class="return-line">
+                    Please return <strong>Ahmad, 0408178263</strong>. or löytötavaratoimisto
+                      <div class="address">Itsenäisyydenkatu 7-9</div>
+                </div>
+                <div class="thankyou">Thank you.</div>
+            </div>
+
+            <!-- Finnish -->
+            <div class="language-box finnish">
+                <div class="body-text">
+                    Kadonnut parkkipaikalla 25. toukokuuta 2026.<br>
+                    Pese ja pidä kuivana. Ei hylätty.
+                </div>
+                <div class="return-line">
+                    Palauta <strong>Ahmad, 0408178263</strong> tai löytötavaratoimisto
+                      <div class="address">Itsenäisyydenkatu 7-9</div>
+                </div>
+                <div class="thankyou">Kiitos.</div>
+            </div>
+        </div>
+
+
+
+        <!-- Image centered at bottom -->
+        <div class="image-wrapper">
+            <img src="luggage.png" alt="Luggage" onerror="this.style.display='none'">
+        </div>
+    </div>
+</body>
+</html>
